@@ -1,12 +1,12 @@
 {
-  "name": "opencode-forgelore",
+  "name": "@forgelore/opencode",
   "version": "0.1.0",
   "description": "OpenCode plugin for forgelore — multi-agent spec-driven development",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "opencode-forgelore": "./dist/setup.js"
+    "forgelore-opencode": "./dist/setup.js"
   },
   "exports": {
     ".": {

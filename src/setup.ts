@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * opencode-forgelore setup
  * Run with: bunx opencode-forgelore
@@ -73,7 +72,7 @@ async function main() {
       config.plugin = [];
     }
 
-    const pluginName = "opencode-forgelore";
+    const pluginName = "@forgelore/opencode";
     if (!config.plugin.includes(pluginName)) {
       config.plugin.push(pluginName);
       await writeFile(opencodeConfigPath, JSON.stringify(config, null, 2) + "\n");

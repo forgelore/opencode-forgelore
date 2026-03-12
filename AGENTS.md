@@ -1,10 +1,10 @@
-# AGENTS.md — opencode-forgelore
+# AGENTS.md — @forgelore/opencode
 
 Instructions for AI agents working in this repository.
 
 ## Project Overview
 
-opencode-forgelore is an OpenCode plugin that connects forgelore's spec engine with OpenCode's multi-agent infrastructure. It provides tools and hooks that integrate into OpenCode's plugin API.
+@forgelore/opencode is an OpenCode plugin that connects forgelore's spec engine with OpenCode's multi-agent infrastructure. It provides tools and hooks that integrate into OpenCode's plugin API.
 
 ## Tech Stack
 
@@ -30,7 +30,7 @@ Tools: `forgelore:run`, `forgelore:status`, `forgelore:build`, `forgelore:valida
 - `tool.execute.after` — warns on unspecced file edits
 
 ### Setup CLI (`src/setup.ts`)
-Standalone bin script for `bunx opencode-forgelore`. Adds plugin to opencode.json, installs CLI, runs init, copies agents.
+Standalone bin script for `bunx @forgelore/opencode`. Adds plugin to opencode.json, installs CLI, runs init, copies agents.
 
 ### Agents (`agents/`)
 Markdown files with YAML frontmatter defining model, tools, temperature, and system instructions for OpenCode agents.

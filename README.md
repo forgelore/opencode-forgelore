@@ -1,4 +1,4 @@
-# opencode-forgelore
+# @forgelore/opencode
 
 **Multi-agent spec-driven development for [OpenCode](https://opencode.ai).**
 
@@ -9,11 +9,11 @@ An OpenCode plugin that connects [forgelore](https://github.com/DxVapor/forgelor
 One command does everything:
 
 ```bash
-bunx opencode-forgelore
+bunx @forgelore/opencode
 ```
 
 This will:
-1. Add `opencode-forgelore` to your OpenCode plugin config
+1. Add `@forgelore/opencode` to your OpenCode plugin config
 2. Install the `@forgelore/cli` CLI globally
 3. Run `forgelore init` to scaffold specs and skills in your project
 4. Copy agent definitions to `.opencode/agents/`
@@ -29,7 +29,7 @@ If you prefer to set things up yourself:
 ```json
 {
   "plugin": [
-    "opencode-forgelore"
+    "@forgelore/opencode"
   ]
 }
 ```
@@ -126,8 +126,8 @@ Orchestration settings live in `forgelore/forgelore.json`:
 ## Development
 
 ```bash
-git clone https://github.com/DxVapor/opencode-forgelore.git
-cd opencode-forgelore
+git clone https://github.com/DxVapor/@forgelore/opencode.git
+cd @forgelore/opencode
 bun install
 bun run build
 ```
