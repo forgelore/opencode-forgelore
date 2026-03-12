@@ -2,7 +2,7 @@
 
 **Multi-agent spec-driven development for [OpenCode](https://opencode.ai).**
 
-An OpenCode plugin that connects [forgelore](https://github.com/DxVapor/forgelore)'s spec engine with OpenCode's multi-agent infrastructure. Spawns dedicated builder, validator, planner, and archivist agents — each in their own process with the right model for the job.
+An OpenCode plugin that connects [forgelore](https://github.com/forgelore/forgelore)'s spec engine with OpenCode's multi-agent infrastructure. Spawns dedicated builder, validator, planner, and archivist agents — each in their own process with the right model for the job.
 
 ## Quick Setup
 
@@ -126,7 +126,7 @@ Orchestration settings live in `forgelore/forgelore.json`:
 ## Development
 
 ```bash
-git clone https://github.com/DxVapor/@forgelore/opencode.git
+git clone https://github.com/forgelore/opencode-forgelore.git
 cd @forgelore/opencode
 bun install
 bun run build
