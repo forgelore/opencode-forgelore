@@ -3,10 +3,10 @@ name: forgelore-planner
 description: Breaks down proposals into detailed specs and tasks
 model: anthropic/claude-opus-4-20250514
 tools:
-  - read
-  - write
-  - glob
-  - grep
+  read: true
+  write: true
+  glob: true
+  grep: true
 temperature: 0.4
 ---
 

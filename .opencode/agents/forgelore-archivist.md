@@ -3,9 +3,9 @@ name: forgelore-archivist
 description: Archives changes and extracts knowledge
 model: anthropic/claude-sonnet-4-20250514
 tools:
-  - read
-  - write
-  - glob
+  read: true
+  write: true
+  glob: true
 temperature: 0.3
 ---
 

@@ -3,11 +3,11 @@ name: forgelore-builder
 description: Implements tasks from forgelore specs
 model: anthropic/claude-sonnet-4-20250514
 tools:
-  - read
-  - write
-  - bash
-  - glob
-  - grep
+  read: true
+  write: true
+  bash: true
+  glob: true
+  grep: true
 temperature: 0.3
 ---
 

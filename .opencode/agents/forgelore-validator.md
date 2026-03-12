@@ -3,10 +3,10 @@ name: forgelore-validator
 description: Validates implementation against specs with clean context
 model: openai/codex
 tools:
-  - read
-  - glob
-  - grep
-  - bash
+  read: true
+  glob: true
+  grep: true
+  bash: true
 temperature: 0.1
 ---
 
