@@ -4,45 +4,47 @@ Instructions for AI agents working in this repository.
 
 ## Project Overview
 
-opencode-forgelore is an OpenCode plugin that connects forgelore's spec engine with OpenCode's multi-agent infrastructure. It spawns background agents via `opencode run` for building, validating, planning, and archiving.
+opencode-forgelore is an OpenCode plugin that connects forgelore's spec engine with OpenCode's multi-agent infrastructure. It provides tools and hooks that integrate into OpenCode's plugin API.
 
 ## Tech Stack
 
 - **Runtime**: Bun
 - **Language**: TypeScript (strict mode)
-- **Build**: tsup (ESM only)
-- **Dependencies**: `@forgelore/core` (peer), `opencode` (peer)
+- **Build**: tsup (ESM only, dual entry: index + setup)
+- **Plugin SDK**: `@opencode-ai/plugin` (tools, hooks, types)
+- **Spec engine**: `@forgelore/core` (peer dependency)
 
 ## Architecture
 
-### Plugin entry
-`src/plugin.ts` exports a default function returning `{ name, version, tools, hooks }`.
+### Plugin entry (`src/index.ts`)
+Default export is an async `Plugin` function matching OpenCode's `(PluginInput) => Promise<Hooks>` signature.
 
-### Tools (`src/tools/`)
-Each tool is an async function receiving `ctx` (with `$` shell and `directory`) and a typed request object. Tools spawn background agents via `opencode run`.
+### Tools (`src/tools.ts`)
+`createTools(ctx)` factory that closes over `PluginInput` for access to `ctx.$` (BunShell). Returns a record of `ToolDefinition` objects using the `tool()` helper with zod schemas. Each tool's `execute()` returns `Promise<string>`.
 
-### Hooks (`src/hooks/`)
-Each hook is an async function receiving `ctx` with session/file info. Hooks integrate with OpenCode's event system.
+Tools: `forgelore:run`, `forgelore:status`, `forgelore:build`, `forgelore:validate`.
+
+### Hooks (`src/hooks.ts`)
+`createHooks(ctx)` factory returning partial `Hooks` object. Hooks:
+- `experimental.chat.system.transform` — injects spec context into system prompt
+- `tool.execute.after` — warns on unspecced file edits
+
+### Setup CLI (`src/setup.ts`)
+Standalone bin script for `bunx opencode-forgelore`. Adds plugin to opencode.json, installs CLI, runs init, copies agents.
 
 ### Agents (`agents/`)
-Markdown files with YAML frontmatter defining model, tools, temperature, and system instructions.
-
-### Skills (`skills/`)
-Markdown instruction files for the orchestrator role.
+Markdown files with YAML frontmatter defining model, tools, temperature, and system instructions for OpenCode agents.
 
 ## The Golden Rule
 
-The agent that builds NEVER validates its own work. `dispatch-validate.ts` always spawns a fresh `opencode run` process with a different model and zero builder context.
+The agent that builds NEVER validates its own work. `forgelore:validate` always spawns a fresh `opencode run` process with clean context.
 
 ## Key files
 
-- `src/plugin.ts` — Plugin entry point
-- `src/tools/dispatch-build.ts` — Spawns builder agents
-- `src/tools/dispatch-validate.ts` — Spawns validators (clean context)
-- `src/tools/run-forgelore.ts` — Invokes forgelore CLI
-- `src/hooks/on-session-created.ts` — Injects spec context
-- `src/hooks/on-file-edited.ts` — Warns on unspecced edits
-- `src/hooks/on-session-idle.ts` — Suggests next actions
+- `src/index.ts` — Plugin entry point (OpenCode Plugin API)
+- `src/tools.ts` — Tool definitions (tool() + zod schemas)
+- `src/hooks.ts` — Hook definitions (system prompt + edit warnings)
+- `src/setup.ts` — bunx setup CLI
 - `agents/forgelore-*.md` — Agent role definitions
 
 ## Building
@@ -51,5 +53,3 @@ The agent that builds NEVER validates its own work. `dispatch-validate.ts` alway
 bun install
 bun run build
 ```
-
-Note: `@forgelore/core` is a peer dependency. DTS generation is disabled until core is published to npm.

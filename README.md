@@ -4,76 +4,104 @@
 
 An OpenCode plugin that connects [forgelore](https://github.com/DxVapor/forgelore)'s spec engine with OpenCode's multi-agent infrastructure. Spawns dedicated builder, validator, planner, and archivist agents — each in their own process with the right model for the job.
 
+## Quick Setup
+
+One command does everything:
+
+```bash
+bunx opencode-forgelore
+```
+
+This will:
+1. Add `opencode-forgelore` to your OpenCode plugin config
+2. Install the `@forgelore/cli` CLI globally
+3. Run `forgelore init` to scaffold specs and skills in your project
+4. Copy agent definitions to `.opencode/agents/`
+
+That's it. Open `opencode` and start working.
+
+### Manual Setup
+
+If you prefer to set things up yourself:
+
+1. Add the plugin to `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "plugin": [
+    "opencode-forgelore"
+  ]
+}
+```
+
+2. Install the forgelore CLI:
+
+```bash
+bun i -g @forgelore/cli
+```
+
+3. Initialize forgelore in your project:
+
+```bash
+forgelore init
+```
+
+4. Copy the agent definitions from this package's `agents/` directory to `.opencode/agents/` in your project.
+
 ## The Golden Rule
 
 > The agent that builds NEVER validates its own work.
 
-Validators are always spawned via `opencode run` in a completely separate process — separate model, separate context, zero builder history. This ensures genuinely independent validation.
+Validators are always spawned via `opencode run` in a completely separate process — separate model, separate context, zero builder history.
 
 ## Architecture
 
 ```
-Orchestrator (main session, Opus)
-  ├── Planner (Opus) ──────────> specs/requirements.md, design.md, tasks.md
-  ├── Builder (configurable) ──> implements tasks from specs
-  │     ├── frontend tasks ───> configurable model
-  │     ├── backend tasks ────> configurable model
-  │     └── infra tasks ──────> configurable model
-  ├── Validator (Codex) ───────> clean context, verifies against specs
-  └── Archivist (Sonnet) ─────> outcome.md, capability extraction
+Orchestrator (main session)
+  ├── forgelore:status ────────> structured spec overview
+  ├── forgelore:run ───────────> invoke any CLI command
+  ├── forgelore:build ─────────> spawn builder agent for tasks
+  └── forgelore:validate ──────> spawn validator (clean context)
 ```
 
-All background agents are spawned via `opencode run --model provider/model --agent name "prompt" --format json`, leveraging OpenCode's existing auth and provider routing.
-
-## Install
-
-```bash
-# npm
-npm install opencode-forgelore
-
-# bun
-bun add opencode-forgelore
-```
-
-Requires [`@forgelore/core`](https://github.com/DxVapor/forgelore) and [OpenCode](https://opencode.ai) as peer dependencies.
+Background agents are spawned via `opencode run`, leveraging OpenCode's existing auth and provider routing.
 
 ## Plugin Tools
 
 | Tool | Description |
 |------|-------------|
+| `forgelore:run` | Invoke any forgelore CLI command |
+| `forgelore:status` | Structured overview of all changes and progress |
 | `forgelore:build` | Dispatch a builder agent to implement tasks |
 | `forgelore:validate` | Dispatch a validator with clean context |
-| `forgelore:run` | Invoke any forgelore CLI command |
 
 ## Plugin Hooks
 
-| Hook | Trigger | Action |
-|------|---------|--------|
-| `session.created` | New OpenCode session | Injects forgelore spec context |
-| `file.edited` | File modification | Warns on unspecced edits |
-| `session.idle` | Agent goes idle | Suggests next spec actions |
+| Hook | When | What |
+|------|------|------|
+| System prompt injection | Every LLM call | Injects active specs, rules, and suggestions |
+| Unspecced edit warning | After file writes | Warns when edited files aren't in any spec's design.md |
 
 ## Agents
 
-Agent definitions live in `agents/` as markdown files with frontmatter:
+Agent definitions are copied to `.opencode/agents/` during setup:
 
-| Agent | Model | Role |
-|-------|-------|------|
+| Agent | Default Model | Role |
+|-------|---------------|------|
 | `forgelore-builder` | Sonnet | Implements tasks from specs |
-| `forgelore-validator` | Codex | Independent validation (clean context) |
+| `forgelore-validator` | Sonnet | Independent validation (clean context) |
 | `forgelore-planner` | Opus | Breaks proposals into specs and tasks |
 | `forgelore-archivist` | Sonnet | Archives changes, extracts knowledge |
 
-## Orchestration Modes
+## Workflow
 
-### Sequential
-Tasks run one after another. Best for dependent work.
-
-### Parallel
-Independent tasks run simultaneously via `Promise.all` across multiple `opencode run` processes.
-
-### Swarm
-All agents active, coordinating through spec files as shared state. Each picks up tasks autonomously.
+```
+forgelore propose "add auth"     # Create a spec
+forgelore verify add-auth        # Check spec completeness
+# Use forgelore:build tool       # Dispatch builder agents
+# Use forgelore:validate tool    # Independent validation
+forgelore archive add-auth       # Capture knowledge
+```
 
 ## Configuration
 

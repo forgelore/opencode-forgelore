@@ -1,11 +1,25 @@
 import { defineConfig } from "tsup";
 
-export default defineConfig({
-  entry: ["src/plugin.ts"],
-  format: ["esm"],
-  dts: true,
-  clean: true,
-  sourcemap: true,
-  splitting: false,
-  external: ["opencode", "@forgelore/core"],
-});
+export default defineConfig([
+  {
+    entry: ["src/index.ts"],
+    format: ["esm"],
+    dts: true,
+    clean: true,
+    sourcemap: true,
+    splitting: false,
+    external: ["@opencode-ai/plugin", "@opencode-ai/plugin/tool", "@forgelore/core"],
+  },
+  {
+    entry: ["src/setup.ts"],
+    format: ["esm"],
+    dts: false,
+    clean: false,
+    sourcemap: false,
+    splitting: false,
+    banner: {
+      js: "#!/usr/bin/env node",
+    },
+    external: ["@forgelore/core"],
+  },
+]);
