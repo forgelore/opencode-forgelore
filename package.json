@@ -1,0 +1,52 @@
+{
+  "name": "opencode-forgelore",
+  "version": "0.1.0",
+  "description": "OpenCode plugin for forgelore — multi-agent spec-driven development",
+  "type": "module",
+  "main": "./dist/plugin.js",
+  "types": "./dist/plugin.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/plugin.d.ts",
+      "import": "./dist/plugin.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "clean": "rm -rf dist"
+  },
+  "files": ["dist", "agents", "skills"],
+  "license": "MIT",
+  "peerDependencies": {
+    "@forgelore/core": ">=0.1.0",
+    "opencode": ">=0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@forgelore/core": { "optional": true },
+    "opencode": { "optional": true }
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0",
+    "@types/node": "^22.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DxVapor/opencode-forgelore.git"
+  },
+  "keywords": [
+    "opencode",
+    "plugin",
+    "forgelore",
+    "spec-driven",
+    "multi-agent",
+    "ai-development"
+  ]
+}
