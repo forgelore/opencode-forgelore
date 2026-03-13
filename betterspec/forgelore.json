@@ -1,5 +1,5 @@
 {
-  "$schema": "https://forgelore.dev/config.json",
+  "$schema": "https://betterspec.dev/config.json",
   "version": "0.1.0",
   "mode": "local",
   "orchestration": {

@@ -1,11 +1,11 @@
 /**
- * opencode-forgelore setup
- * Run with: bunx @forgelore/opencode
+ * opencode-betterspec setup
+ * Run with: bunx @betterspec/opencode
  *
  * This script:
- * 1. Adds "@forgelore/opencode" to ~/.config/opencode/opencode.json plugin[]
- * 2. Installs @forgelore/cli globally
- * 3. Runs `forgelore init` in the current project (scaffolds specs + skill)
+ * 1. Adds "@betterspec/opencode" to ~/.config/opencode/opencode.json plugin[]
+ * 2. Installs @betterspec/cli globally
+ * 3. Runs `betterspec init` in the current project (scaffolds specs + skill)
  * 4. Prompts for model selection per agent role (searchable autocomplete)
  * 5. Copies agent definitions to .opencode/agents/ with selected models
  */
@@ -64,28 +64,28 @@ interface AgentRole {
 
 const AGENT_ROLES: AgentRole[] = [
   {
-    file: "forgelore-planner.md",
+    file: "betterspec-planner.md",
     name: "Planner",
     description: "Breaks down proposals into detailed specs, requirements, and task plans.",
     recommendation: "Best with strong reasoning models (opus-class or o1-class).",
     defaultModel: "anthropic/claude-opus-4-20250514",
   },
   {
-    file: "forgelore-builder.md",
+    file: "betterspec-builder.md",
     name: "Builder",
     description: "Implements tasks from specs — writes code, runs tests, updates task status.",
     recommendation: "Best with fast, capable coding models (sonnet-class).",
     defaultModel: "anthropic/claude-sonnet-4-20250514",
   },
   {
-    file: "forgelore-validator.md",
+    file: "betterspec-validator.md",
     name: "Validator",
     description: "Independently verifies implementation against specs with clean context.",
     recommendation: "Best with a different provider than builder for diverse review.",
     defaultModel: "anthropic/claude-sonnet-4-20250514",
   },
   {
-    file: "forgelore-archivist.md",
+    file: "betterspec-archivist.md",
     name: "Archivist",
     description: "Archives completed changes and extracts knowledge for future reference.",
     recommendation: "Any capable model works — fast models preferred.",
@@ -269,7 +269,7 @@ function injectModel(templateContent: string, model: string): string {
 async function main() {
   const cwd = process.cwd();
 
-  p.intro(`${sedona.bold("forgelore")} ${muted("+ opencode")}`);
+  p.intro(`${sedona.bold("betterspec")} ${muted("+ opencode")}`);
 
   // ── Step 1: Add plugin to opencode.json ──────────────────
 
@@ -293,7 +293,7 @@ async function main() {
       config.plugin = [];
     }
 
-    const pluginName = "@forgelore/opencode";
+    const pluginName = "@betterspec/opencode";
     if (!config.plugin.includes(pluginName)) {
       config.plugin.push(pluginName);
       await writeFile(opencodeConfigPath, JSON.stringify(config, null, 2) + "\n");
@@ -304,41 +304,41 @@ async function main() {
   } catch (err) {
     fail(`Failed to update OpenCode config: ${err}`);
     p.log.info(
-      muted(`Manually add "@forgelore/opencode" to plugin[] in ${opencodeConfigPath}`)
+      muted(`Manually add "@betterspec/opencode" to plugin[] in ${opencodeConfigPath}`)
     );
   }
 
-  // ── Step 2: Install @forgelore/cli globally ──────────────
+  // ── Step 2: Install @betterspec/cli globally ──────────────
 
-  step(2, "Installing @forgelore/cli");
+  step(2, "Installing @betterspec/cli");
 
   try {
-    execSync("which forgelore", { stdio: "ignore" });
-    ok("forgelore CLI already installed");
+    execSync("which betterspec", { stdio: "ignore" });
+    ok("betterspec CLI already installed");
   } catch {
     try {
-      execSync("bun i -g @forgelore/cli", { stdio: "inherit" });
-      ok("Installed @forgelore/cli globally");
+      execSync("bun i -g @betterspec/cli", { stdio: "inherit" });
+      ok("Installed @betterspec/cli globally");
     } catch {
-      warn("Could not install @forgelore/cli globally");
-      p.log.info(muted("Run manually: bun i -g @forgelore/cli"));
+      warn("Could not install @betterspec/cli globally");
+      p.log.info(muted("Run manually: bun i -g @betterspec/cli"));
     }
   }
 
-  // ── Step 3: Run forgelore init ───────────────────────────
+  // ── Step 3: Run betterspec init ───────────────────────────
 
-  step(3, "Initializing forgelore in project");
+  step(3, "Initializing betterspec in project");
 
-  const forgeloreConfigPath = resolve(cwd, "forgelore/forgelore.json");
-  if (await fileExists(forgeloreConfigPath)) {
-    ok("forgelore already initialized");
+  const betterspecConfigPath = resolve(cwd, "betterspec/betterspec.json");
+  if (await fileExists(betterspecConfigPath)) {
+    ok("betterspec already initialized");
   } else {
     try {
-      execSync("forgelore init", { cwd, stdio: "inherit" });
-      ok("forgelore initialized");
+      execSync("betterspec init", { cwd, stdio: "inherit" });
+      ok("betterspec initialized");
     } catch {
-      warn("forgelore init requires interactive input — run it manually");
-      p.log.info(muted("Run: forgelore init"));
+      warn("betterspec init requires interactive input — run it manually");
+      p.log.info(muted("Run: betterspec init"));
     }
   }
 
@@ -383,15 +383,15 @@ async function main() {
     }
   } catch (err) {
     fail(`Failed to write agents: ${err}`);
-    p.log.info(muted("Copy agents manually from the @forgelore/opencode package"));
+    p.log.info(muted("Copy agents manually from the @betterspec/opencode package"));
   }
 
   // ── Done ─────────────────────────────────────────────────
 
   p.note(
     [
-      `${chalk.cyan("forgelore propose")} ${muted('"your idea"')}  ${muted("— create a spec")}`,
-      `${chalk.cyan("forgelore status")}               ${muted("— see project state")}`,
+      `${chalk.cyan("betterspec propose")} ${muted('"your idea"')}  ${muted("— create a spec")}`,
+      `${chalk.cyan("betterspec status")}               ${muted("— see project state")}`,
       `${chalk.cyan("opencode")}                       ${muted("— start coding with agents")}`,
       "",
       muted("To change agent models later, edit .opencode/agents/*.md"),

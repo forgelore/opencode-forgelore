@@ -1,4 +1,4 @@
-# @forgelore/opencode
+# @betterspec/opencode
 
 **Spec-driven development with multi-agent orchestration for [OpenCode](https://opencode.ai).**
 
@@ -7,14 +7,14 @@ Stop shipping code that drifts from what was agreed. This plugin brings structur
 ## Install
 
 ```bash
-bunx @forgelore/opencode
+bunx @betterspec/opencode
 ```
 
 That's it. One command sets up everything:
 
 1. Adds the plugin to your OpenCode config
-2. Installs the [`@forgelore/cli`](https://github.com/forgelore/forgelore) CLI
-3. Initializes forgelore in your project (specs, knowledge base, skills)
+2. Installs the [`@betterspec/cli`](https://github.com/betterspec/betterspec) CLI
+3. Initializes betterspec in your project (specs, knowledge base, skills)
 4. Copies agent definitions to `.opencode/agents/`
 
 Start OpenCode and you're ready to go.
@@ -25,9 +25,9 @@ Start OpenCode and you're ready to go.
 
 AI agents are great at writing code. They're terrible at remembering what they were supposed to build, checking their own work, and learning from past decisions.
 
-**forgelore** solves the knowledge problem — it's a provider-agnostic spec engine that manages proposals, requirements, scenarios, designs, tasks, and a living knowledge base. No AI dependency. Just structured markdown and a CLI.
+**betterspec** solves the knowledge problem — it's a provider-agnostic spec engine that manages proposals, requirements, scenarios, designs, tasks, and a living knowledge base. No AI dependency. Just structured markdown and a CLI.
 
-**@forgelore/opencode** solves the execution problem — it plugs forgelore into OpenCode's multi-agent infrastructure so agents actually follow specs, delegate to specialists, and get their work independently verified.
+**@betterspec/opencode** solves the execution problem — it plugs betterspec into OpenCode's multi-agent infrastructure so agents actually follow specs, delegate to specialists, and get their work independently verified.
 
 Together, they give you a development workflow where:
 
@@ -46,14 +46,14 @@ Different parts of the development process have different needs. A planning task
 You (in OpenCode)
   │
   ├── Orchestrator ──────────── your main session model
-  │     uses forgelore:status, forgelore:run to understand project state
+  │     uses betterspec:status, betterspec:run to understand project state
   │
-  ├── forgelore:build ─────────  spawns a Builder agent
-  │     via `opencode run --model <your-choice> --agent forgelore-builder`
+  ├── betterspec:build ─────────  spawns a Builder agent
+  │     via `opencode run --model <your-choice> --agent betterspec-builder`
   │     reads specs, implements tasks, updates progress
   │
-  └── forgelore:validate ──────  spawns a Validator agent
-        via `opencode run --model <different-model> --agent forgelore-validator`
+  └── betterspec:validate ──────  spawns a Validator agent
+        via `opencode run --model <different-model> --agent betterspec-validator`
         clean context, zero build history, independent verification
 ```
 
@@ -73,13 +73,13 @@ This eliminates the most common failure mode in AI development: an agent convinc
 
 ## How It Works Under the Hood
 
-### Forgelore: The Spec Engine
+### Betterspec: The Spec Engine
 
-[forgelore](https://github.com/forgelore/forgelore) manages the structured knowledge layer:
+[betterspec](https://github.com/betterspec/betterspec) manages the structured knowledge layer:
 
 ```
-forgelore/
-├── forgelore.json                 # Config (mode, enforcement, orchestration)
+betterspec/
+├── betterspec.json                 # Config (mode, enforcement, orchestration)
 ├── changes/
 │   └── add-auth/
 │       ├── proposal.md            # The original idea
@@ -96,20 +96,20 @@ forgelore/
     └── decisions/                 # Architecture decision records
 ```
 
-The key insight: **knowledge compounds**. When a change is completed and archived, forgelore extracts capabilities, updates patterns, and feeds what was learned back into the knowledge base. The next agent session starts smarter than the last one.
+The key insight: **knowledge compounds**. When a change is completed and archived, betterspec extracts capabilities, updates patterns, and feeds what was learned back into the knowledge base. The next agent session starts smarter than the last one.
 
 ### The Plugin: Bridging Specs to Agents
 
-This plugin connects forgelore's spec engine to OpenCode through:
+This plugin connects betterspec's spec engine to OpenCode through:
 
 **Tools** — the orchestrator's interface to the spec system:
 
 | Tool | What it does |
 |------|--------------|
-| `forgelore:run` | Run any CLI command (`status`, `propose`, `verify`, `diff`, etc.) |
-| `forgelore:status` | Get structured data about all changes and task progress |
-| `forgelore:build` | Spawn a builder agent to implement tasks from a spec |
-| `forgelore:validate` | Spawn a validator with clean context to verify work |
+| `betterspec:run` | Run any CLI command (`status`, `propose`, `verify`, `diff`, etc.) |
+| `betterspec:status` | Get structured data about all changes and task progress |
+| `betterspec:build` | Spawn a builder agent to implement tasks from a spec |
+| `betterspec:validate` | Spawn a validator with clean context to verify work |
 
 **Hooks** — automatic behavior that keeps agents aligned:
 
@@ -122,36 +122,36 @@ This plugin connects forgelore's spec engine to OpenCode through:
 
 | Agent | Default Model | Role |
 |-------|---------------|------|
-| `forgelore-planner` | Opus | Transforms proposals into specs, requirements, and task breakdowns |
-| `forgelore-builder` | Sonnet | Implements tasks following specs and established patterns |
-| `forgelore-validator` | Sonnet | Independent verification — clean context, no build history |
-| `forgelore-archivist` | Sonnet | Archives completed changes, extracts capabilities to knowledge base |
+| `betterspec-planner` | Opus | Transforms proposals into specs, requirements, and task breakdowns |
+| `betterspec-builder` | Sonnet | Implements tasks following specs and established patterns |
+| `betterspec-validator` | Sonnet | Independent verification — clean context, no build history |
+| `betterspec-archivist` | Sonnet | Archives completed changes, extracts capabilities to knowledge base |
 
 ## Workflow
 
 ```bash
 # 1. Propose a change
-forgelore propose "add user authentication"
+betterspec propose "add user authentication"
 
 # 2. Plan it (or use the planner agent)
 #    Fill in requirements.md, scenarios.md, design.md, tasks.md
 
 # 3. Verify the spec is complete
-forgelore verify add-user-authentication
+betterspec verify add-user-authentication
 
 # 4. Build — the orchestrator dispatches builder agents
-#    (via forgelore:build tool in OpenCode)
+#    (via betterspec:build tool in OpenCode)
 
 # 5. Validate — a separate agent reviews the work cold
-#    (via forgelore:validate tool in OpenCode)
+#    (via betterspec:validate tool in OpenCode)
 
 # 6. Archive — capture what was learned
-forgelore archive add-user-authentication
+betterspec archive add-user-authentication
 ```
 
 ## Configuration
 
-Orchestration and enforcement settings live in `forgelore/forgelore.json`:
+Orchestration and enforcement settings live in `betterspec/betterspec.json`:
 
 ```json
 {
@@ -171,28 +171,28 @@ Orchestration and enforcement settings live in `forgelore/forgelore.json`:
 
 ## Manual Setup
 
-If you prefer to configure things yourself instead of running `bunx @forgelore/opencode`:
+If you prefer to configure things yourself instead of running `bunx @betterspec/opencode`:
 
 1. Add the plugin to `~/.config/opencode/opencode.json`:
 
 ```json
 {
   "plugin": [
-    "@forgelore/opencode"
+    "@betterspec/opencode"
   ]
 }
 ```
 
-2. Install the forgelore CLI:
+2. Install the betterspec CLI:
 
 ```bash
-bun i -g @forgelore/cli
+bun i -g @betterspec/cli
 ```
 
-3. Initialize forgelore in your project:
+3. Initialize betterspec in your project:
 
 ```bash
-forgelore init
+betterspec init
 ```
 
 4. Copy agent definitions from this package's `agents/` directory to `.opencode/agents/` in your project.
@@ -200,8 +200,8 @@ forgelore init
 ## Development
 
 ```bash
-git clone https://github.com/forgelore/opencode-forgelore.git
-cd opencode-forgelore
+git clone https://github.com/betterspec/opencode-betterspec.git
+cd opencode-betterspec
 bun install
 bun run build
 ```

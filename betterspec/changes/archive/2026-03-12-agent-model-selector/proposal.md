@@ -2,7 +2,7 @@
 
 ## Motivation
 
-When running `bunx @forgelore/opencode`, the setup script currently hardcodes model choices in the agent frontmatter (Sonnet for builder/archivist, Opus for planner, Codex for validator). Users have different provider subscriptions, model preferences, and cost constraints. The models we picked may not even be available to them.
+When running `bunx @betterspec/opencode`, the setup script currently hardcodes model choices in the agent frontmatter (Sonnet for builder/archivist, Opus for planner, Codex for validator). Users have different provider subscriptions, model preferences, and cost constraints. The models we picked may not even be available to them.
 
 Users should be able to pick the provider/model for each agent role during the interactive setup, so the agent files written to `.opencode/agents/` reflect their actual environment.
 
@@ -10,7 +10,7 @@ Users should be able to pick the provider/model for each agent role during the i
 
 ### In Scope
 
-- Interactive model selection during `bunx @forgelore/opencode` setup
+- Interactive model selection during `bunx @betterspec/opencode` setup
 - Querying available models from OpenCode (`opencode models`)
 - Writing user-selected models into agent frontmatter
 - Sensible defaults when the user skips selection
@@ -30,7 +30,7 @@ Users should be able to pick the provider/model for each agent role during the i
 
 ## Success Criteria
 
-1. Running `bunx @forgelore/opencode` prompts the user to select models for each agent role
+1. Running `bunx @betterspec/opencode` prompts the user to select models for each agent role
 2. The generated `.opencode/agents/*.md` files contain the user's chosen models
 3. Users can skip selection to use sensible defaults
 4. The setup still works non-interactively (e.g. in CI) by falling back to defaults

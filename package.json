@@ -1,12 +1,12 @@
 {
-  "name": "@forgelore/opencode",
+  "name": "@betterspec/opencode",
   "version": "0.1.0",
-  "description": "OpenCode plugin for forgelore — multi-agent spec-driven development",
+  "description": "OpenCode plugin for betterspec — multi-agent spec-driven development",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "forgelore-opencode": "./dist/setup.js"
+    "betterspec-opencode": "./dist/setup.js"
   },
   "exports": {
     ".": {
@@ -23,15 +23,15 @@
   "files": ["dist", "agents", "skills"],
   "license": "MIT",
   "peerDependencies": {
-    "@forgelore/core": ">=0.2.0"
+    "@betterspec/core": ">=0.2.0"
   },
   "peerDependenciesMeta": {
-    "@forgelore/core": {
+    "@betterspec/core": {
       "optional": true
     }
   },
   "devDependencies": {
-    "@forgelore/core": "^0.2.3",
+    "@betterspec/core": "^0.2.3",
     "@opencode-ai/plugin": "^1.2.24",
     "@types/node": "^22.0.0",
     "tsup": "^8.4.0",
@@ -44,13 +44,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/forgelore/opencode-forgelore.git"
+    "url": "https://github.com/betterspec/opencode-betterspec.git"
   },
   "keywords": [
     "opencode",
     "opencode-plugin",
     "plugin",
-    "forgelore",
+    "betterspec",
     "spec-driven",
     "multi-agent",
     "ai-development"

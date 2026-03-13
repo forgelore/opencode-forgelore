@@ -8,7 +8,7 @@ export default defineConfig([
     clean: true,
     sourcemap: true,
     splitting: false,
-    external: ["@opencode-ai/plugin", "@opencode-ai/plugin/tool", "@forgelore/core"],
+    external: ["@opencode-ai/plugin", "@opencode-ai/plugin/tool", "@betterspec/core"],
   },
   {
     entry: ["src/setup.ts"],
@@ -20,6 +20,6 @@ export default defineConfig([
     banner: {
       js: "#!/usr/bin/env node",
     },
-    external: ["@forgelore/core"],
+    external: ["@betterspec/core"],
   },
 ]);

@@ -3,13 +3,13 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "opencode-forgelore",
+      "name": "opencode-betterspec",
       "dependencies": {
         "@clack/prompts": "^1.1.0",
         "chalk": "^5.6.2",
       },
       "devDependencies": {
-        "@forgelore/core": "^0.2.3",
+        "@betterspec/core": "^0.2.3",
         "@opencode-ai/plugin": "^1.2.24",
         "@types/node": "^22.0.0",
         "tsup": "^8.4.0",
@@ -17,10 +17,10 @@
         "vitest": "^3.1.0",
       },
       "peerDependencies": {
-        "@forgelore/core": ">=0.2.0",
+        "@betterspec/core": ">=0.2.0",
       },
       "optionalPeers": [
-        "@forgelore/core",
+        "@betterspec/core",
       ],
     },
   },
@@ -81,7 +81,7 @@
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.27.3", "", { "os": "win32", "cpu": "x64" }, "sha512-4uJGhsxuptu3OcpVAzli+/gWusVGwZZHTlS63hh++ehExkVT8SgiEf7/uC/PclrPPkLhZqGgCTjd0VWLo6xMqA=="],
 
-    "@forgelore/core": ["@forgelore/core@0.2.3", "", {}, "sha512-n/Fb8/q6EdZSio3/BxtX8Z3vnlwxDqGw8rO88b0nsNBvdeLd6PGgkdA5PFytg5Hwy1E38Ye8Z4I7CfyoWX7ILQ=="],
+    "@betterspec/core": ["@betterspec/core@0.2.3", "", {}, "sha512-n/Fb8/q6EdZSio3/BxtX8Z3vnlwxDqGw8rO88b0nsNBvdeLd6PGgkdA5PFytg5Hwy1E38Ye8Z4I7CfyoWX7ILQ=="],
 
     "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.13", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA=="],
 

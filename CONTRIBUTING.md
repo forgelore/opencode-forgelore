@@ -1,6 +1,6 @@
-# Contributing to @forgelore/opencode
+# Contributing to @betterspec/opencode
 
-Thank you for your interest in contributing to the OpenCode plugin for forgelore! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to the OpenCode plugin for betterspec! This document provides guidelines and instructions for contributing.
 
 ## Code of Conduct
 
@@ -10,7 +10,7 @@ Be respectful, constructive, and inclusive. We're building tools for collaborati
 
 ### Reporting Issues
 
-- Use [GitHub Issues](https://github.com/forgelore/opencode-forgelore/issues) to report bugs or request features
+- Use [GitHub Issues](https://github.com/betterspec/opencode-betterspec/issues) to report bugs or request features
 - Check existing issues before creating a new one
 - Include reproduction steps, expected behavior, and actual behavior for bug reports
 - Note your OpenCode version and plugin version
@@ -29,8 +29,8 @@ All changes to `main` must come through pull requests. Direct pushes to `main` a
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/opencode-forgelore.git
-cd opencode-forgelore
+git clone https://github.com/YOUR_USERNAME/opencode-betterspec.git
+cd opencode-betterspec
 
 # Install dependencies
 bun install
@@ -45,9 +45,9 @@ bunx tsc --noEmit
 ### Project Structure
 
 - `src/index.ts` — Plugin entry point (OpenCode Plugin API)
-- `src/tools.ts` — Tool definitions (`forgelore:run`, `forgelore:status`, `forgelore:build`, `forgelore:validate`)
+- `src/tools.ts` — Tool definitions (`betterspec:run`, `betterspec:status`, `betterspec:build`, `betterspec:validate`)
 - `src/hooks.ts` — Hook definitions (system prompt injection, unspecced edit warnings)
-- `src/setup.ts` — Setup CLI (`bunx @forgelore/opencode`)
+- `src/setup.ts` — Setup CLI (`bunx @betterspec/opencode`)
 - `agents/` — Agent templates (planner, builder, validator, archivist)
 
 ### Code Guidelines
@@ -61,16 +61,16 @@ bunx tsc --noEmit
 
 ### The Golden Rule
 
-The agent that builds NEVER validates its own work. `forgelore:validate` always spawns a fresh process with clean context. Preserve this separation in any changes to the tool system.
+The agent that builds NEVER validates its own work. `betterspec:validate` always spawns a fresh process with clean context. Preserve this separation in any changes to the tool system.
 
 ### Spec-Driven Development
 
-This project dogfoods forgelore. For significant changes:
+This project dogfoods betterspec. For significant changes:
 
-1. Run `forgelore propose "your idea"` to create a change spec
+1. Run `betterspec propose "your idea"` to create a change spec
 2. Fill in requirements, scenarios, design, and tasks
 3. Implement from the spec
-4. Archive when done with `forgelore archive <change-name>`
+4. Archive when done with `betterspec archive <change-name>`
 
 ### Agent Definitions
 
@@ -78,8 +78,8 @@ When modifying agent files in `agents/`:
 
 - Keep YAML frontmatter tools as a **record** format (`read: true`), not array format (`- read`)
 - The `model:` field in templates serves as the default — users override it during setup
-- Test that `bunx @forgelore/opencode` correctly copies and transforms the agents
+- Test that `bunx @betterspec/opencode` correctly copies and transforms the agents
 
 ## Questions?
 
-Open a [discussion](https://github.com/forgelore/opencode-forgelore/discussions) or an issue. We're happy to help.
+Open a [discussion](https://github.com/betterspec/opencode-betterspec/discussions) or an issue. We're happy to help.

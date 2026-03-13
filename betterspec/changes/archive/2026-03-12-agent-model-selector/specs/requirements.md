@@ -8,7 +8,7 @@
 4. **FR-4**: Each role MUST have a sensible default model that is pre-selected
 5. **FR-5**: The user MUST be able to accept all defaults at once (e.g. press Enter through all prompts, or a "use defaults" shortcut)
 6. **FR-6**: The selected models MUST be written into the `model` field in each agent's YAML frontmatter in `.opencode/agents/`
-7. **FR-7**: The `forgelore:build` and `forgelore:validate` tools in `src/tools.ts` MUST use the models from the agent files rather than hardcoded defaults
+7. **FR-7**: The `betterspec:build` and `betterspec:validate` tools in `src/tools.ts` MUST use the models from the agent files rather than hardcoded defaults
 
 ## Non-Functional Requirements
 

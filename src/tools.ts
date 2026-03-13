@@ -1,5 +1,5 @@
 /**
- * opencode-forgelore tools
+ * opencode-betterspec tools
  * All tools use the OpenCode `tool()` helper with zod schemas.
  * Tools are created inside a factory that closes over the PluginInput
  * so they can access ctx.$ (BunShell) and ctx.directory.
@@ -14,7 +14,7 @@ import {
   listChanges,
   readConfig,
   summarizeTasks,
-} from "@forgelore/core";
+} from "@betterspec/core";
 
 /**
  * Read the model from an agent's YAML frontmatter on disk.
@@ -39,22 +39,22 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
   const { $ } = ctx;
 
   /**
-   * forgelore:run — invoke any forgelore CLI command from within OpenCode
+   * betterspec:run — invoke any betterspec CLI command from within OpenCode
    */
   const run = tool({
     description:
-      "Run a forgelore CLI command (e.g. status, propose, verify, list, diff). " +
+      "Run a betterspec CLI command (e.g. status, propose, verify, list, diff). " +
       "Returns the command output. Use this to interact with the spec system.",
     args: {
       command: tool.schema
         .string()
         .describe(
-          'The forgelore subcommand and arguments, e.g. "status", "list", "verify my-change", "diff my-change"'
+          'The betterspec subcommand and arguments, e.g. "status", "list", "verify my-change", "diff my-change"'
         ),
     },
     async execute(args, toolCtx) {
       try {
-        const result = await $`forgelore ${args.command}`
+        const result = await $`betterspec ${args.command}`
           .cwd(toolCtx.directory)
           .quiet();
         return result.text() || "(no output)";
@@ -67,11 +67,11 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
   });
 
   /**
-   * forgelore:status — structured overview of all changes and progress
+   * betterspec:status — structured overview of all changes and progress
    */
   const status = tool({
     description:
-      "Get a structured overview of all forgelore changes, their status, and task progress. " +
+      "Get a structured overview of all betterspec changes, their status, and task progress. " +
       "Returns machine-readable data about the spec system state.",
     args: {
       includeArchived: tool.schema
@@ -81,7 +81,7 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
     },
     async execute(args, toolCtx) {
       if (!(await configExists(toolCtx.directory))) {
-        return "forgelore is not initialized in this project. Run `forgelore init` first.";
+        return "betterspec is not initialized in this project. Run `betterspec init` first.";
       }
 
       const config = await readConfig(toolCtx.directory);
@@ -91,7 +91,7 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
       );
 
       if (changes.length === 0) {
-        return `forgelore initialized (mode: ${config.mode}), no active changes.\nRun \`forgelore propose "your idea"\` to create one.`;
+        return `betterspec initialized (mode: ${config.mode}), no active changes.\nRun \`betterspec propose "your idea"\` to create one.`;
       }
 
       const lines: string[] = [
@@ -105,7 +105,7 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
           `## ${change.name} [${change.status}]`,
           `  Tasks: ${tasks.passed}/${tasks.total} passed, ${tasks.failed} failed, ${tasks.inProgress} in-progress`,
           `  Updated: ${change.updatedAt}`,
-          `  Specs: forgelore/changes/${change.name}/`,
+          `  Specs: betterspec/changes/${change.name}/`,
           ""
         );
       }
@@ -115,16 +115,16 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
   });
 
   /**
-   * forgelore:build — spawn a builder agent via opencode run
+   * betterspec:build — spawn a builder agent via opencode run
    */
   const build = tool({
     description:
-      "Dispatch a background builder agent to implement tasks from a forgelore change spec. " +
+      "Dispatch a background builder agent to implement tasks from a betterspec change spec. " +
       "The builder runs in a separate opencode session with its own model.",
     args: {
       changeName: tool.schema
         .string()
-        .describe("Name of the forgelore change to build"),
+        .describe("Name of the betterspec change to build"),
       taskIds: tool.schema
         .string()
         .optional()
@@ -137,7 +137,7 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
     async execute(args, toolCtx) {
       const agentModel = await readModelFromAgent(
         toolCtx.directory,
-        "forgelore-builder.md",
+        "betterspec-builder.md",
         "anthropic/claude-sonnet-4-20250514"
       );
       const model = args.model ?? agentModel;
@@ -150,19 +150,19 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
         taskFilter,
         "",
         "Read the spec files:",
-        `- forgelore/changes/${args.changeName}/specs/requirements.md`,
-        `- forgelore/changes/${args.changeName}/specs/scenarios.md`,
-        `- forgelore/changes/${args.changeName}/design.md`,
-        `- forgelore/changes/${args.changeName}/tasks.md`,
+        `- betterspec/changes/${args.changeName}/specs/requirements.md`,
+        `- betterspec/changes/${args.changeName}/specs/scenarios.md`,
+        `- betterspec/changes/${args.changeName}/design.md`,
+        `- betterspec/changes/${args.changeName}/tasks.md`,
         "",
-        "Follow patterns in forgelore/knowledge/patterns.md.",
-        "Respect architecture in forgelore/knowledge/architecture.md.",
+        "Follow patterns in betterspec/knowledge/patterns.md.",
+        "Respect architecture in betterspec/knowledge/architecture.md.",
         "Update task status in tasks.md as you complete each task.",
       ].join("\n");
 
       try {
         toolCtx.metadata({ title: `Building ${args.changeName}...` });
-        const result = await $`opencode run --model ${model} --agent forgelore-builder ${prompt}`
+        const result = await $`opencode run --model ${model} --agent betterspec-builder ${prompt}`
           .cwd(toolCtx.directory)
           .quiet();
         return `Builder completed.\n\n${result.text()}`;
@@ -173,7 +173,7 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
   });
 
   /**
-   * forgelore:validate — spawn a validation agent with CLEAN context
+   * betterspec:validate — spawn a validation agent with CLEAN context
    * GOLDEN RULE: The agent that builds NEVER validates its own work.
    */
   const validate = tool({
@@ -184,7 +184,7 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
     args: {
       changeName: tool.schema
         .string()
-        .describe("Name of the forgelore change to validate"),
+        .describe("Name of the betterspec change to validate"),
       model: tool.schema
         .string()
         .optional()
@@ -193,7 +193,7 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
     async execute(args, toolCtx) {
       const agentModel = await readModelFromAgent(
         toolCtx.directory,
-        "forgelore-validator.md",
+        "betterspec-validator.md",
         "anthropic/claude-sonnet-4-20250514"
       );
       const model = args.model ?? agentModel;
@@ -205,10 +205,10 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
         `Validate change: "${args.changeName}"`,
         "",
         "Read these files:",
-        `- forgelore/changes/${args.changeName}/specs/requirements.md`,
-        `- forgelore/changes/${args.changeName}/specs/scenarios.md`,
-        `- forgelore/changes/${args.changeName}/design.md`,
-        `- forgelore/changes/${args.changeName}/tasks.md`,
+        `- betterspec/changes/${args.changeName}/specs/requirements.md`,
+        `- betterspec/changes/${args.changeName}/specs/scenarios.md`,
+        `- betterspec/changes/${args.changeName}/design.md`,
+        `- betterspec/changes/${args.changeName}/tasks.md`,
         "",
         "Then review the actual implementation code referenced in design.",
         "For each requirement, check if it's met. Walk through each scenario.",
@@ -218,7 +218,7 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
 
       try {
         toolCtx.metadata({ title: `Validating ${args.changeName}...` });
-        const result = await $`opencode run --model ${model} --agent forgelore-validator ${prompt}`
+        const result = await $`opencode run --model ${model} --agent betterspec-validator ${prompt}`
           .cwd(toolCtx.directory)
           .quiet();
         return `Validation complete.\n\n${result.text()}`;
@@ -229,9 +229,9 @@ export function createTools(ctx: PluginInput): Record<string, ToolDefinition> {
   });
 
   return {
-    "forgelore:run": run,
-    "forgelore:status": status,
-    "forgelore:build": build,
-    "forgelore:validate": validate,
+    "betterspec:run": run,
+    "betterspec:status": status,
+    "betterspec:build": build,
+    "betterspec:validate": validate,
   };
 }

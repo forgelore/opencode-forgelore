@@ -2,7 +2,7 @@
 
 ## What Was Built
 
-Interactive model selection for the `bunx @forgelore/opencode` setup CLI. Users can now choose which AI model powers each of the 4 agent roles (planner, builder, validator, archivist) instead of getting hardcoded defaults.
+Interactive model selection for the `bunx @betterspec/opencode` setup CLI. Users can now choose which AI model powers each of the 4 agent roles (planner, builder, validator, archivist) instead of getting hardcoded defaults.
 
 ### Setup Flow (new steps 4-5)
 
@@ -14,12 +14,12 @@ Interactive model selection for the `bunx @forgelore/opencode` setup CLI. Users 
 
 ### Tool Integration
 
-`forgelore:build` and `forgelore:validate` now read the model from `.opencode/agents/forgelore-{role}.md` frontmatter at runtime via `readModelFromAgent()`, instead of using hardcoded defaults. The `args.model` override still takes priority, and missing files fall back gracefully.
+`betterspec:build` and `betterspec:validate` now read the model from `.opencode/agents/betterspec-{role}.md` frontmatter at runtime via `readModelFromAgent()`, instead of using hardcoded defaults. The `args.model` override still takes priority, and missing files fall back gracefully.
 
 ## Files Changed
 
 - `src/setup.ts` — rewrote step 4 (was plain copy, now model selection + injection), added step 5 (write agents), added `@clack/prompts` + `chalk` UI
-- `src/tools.ts` — added `readModelFromAgent()` helper, updated `forgelore:build` and `forgelore:validate` execute functions
+- `src/tools.ts` — added `readModelFromAgent()` helper, updated `betterspec:build` and `betterspec:validate` execute functions
 - `package.json` — added `@clack/prompts@^1.1.0` and `chalk@^5.6.2` as dependencies
 
 ## Capabilities Emerged

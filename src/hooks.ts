@@ -1,6 +1,6 @@
 /**
- * opencode-forgelore hooks
- * Maps forgelore behavior to real OpenCode hook points.
+ * opencode-betterspec hooks
+ * Maps betterspec behavior to real OpenCode hook points.
  *
  * Hooks:
  * - experimental.chat.system.transform — inject spec context into system prompt
@@ -15,14 +15,14 @@ import {
   readKnowledge,
   readChangeFile,
   summarizeTasks,
-} from "@forgelore/core";
+} from "@betterspec/core";
 
 export async function createHooks(
   ctx: PluginInput
 ): Promise<Partial<Hooks>> {
   return {
     /**
-     * Inject forgelore spec context into the system prompt.
+     * Inject betterspec spec context into the system prompt.
      * This runs before every LLM call, so agents always know about active specs.
      */
     "experimental.chat.system.transform": async (_input, output) => {
@@ -38,9 +38,9 @@ export async function createHooks(
         const knowledge = await readKnowledge(projectRoot);
 
         const lines: string[] = [
-          "## Forgelore — Spec-Driven Development Context",
+          "## Betterspec — Spec-Driven Development Context",
           "",
-          `This project uses forgelore for spec-driven development (mode: ${config.mode}).`,
+          `This project uses betterspec for spec-driven development (mode: ${config.mode}).`,
           "",
         ];
 
@@ -50,7 +50,7 @@ export async function createHooks(
           for (const change of changes) {
             const tasks = summarizeTasks(change.tasks);
             lines.push(
-              `- **${change.name}** [${change.status}] — ${tasks.passed}/${tasks.total} tasks passed — see \`forgelore/changes/${change.name}/\``
+              `- **${change.name}** [${change.status}] — ${tasks.passed}/${tasks.total} tasks passed — see \`betterspec/changes/${change.name}/\``
             );
           }
           lines.push("");
@@ -60,7 +60,7 @@ export async function createHooks(
         if (knowledge.capabilities.length > 0) {
           lines.push(
             `### Capabilities: ${knowledge.capabilities.length} registered`,
-            "See `forgelore/knowledge/capabilities/` for details.",
+            "See `betterspec/knowledge/capabilities/` for details.",
             ""
           );
         }
@@ -68,10 +68,10 @@ export async function createHooks(
         // Enforcement rules
         if (config.enforcement.requireSpecForChanges) {
           lines.push(
-            "### Forgelore Rules",
-            "- Do NOT start coding without a spec. Run `forgelore propose` first.",
-            "- Follow patterns in `forgelore/knowledge/patterns.md`.",
-            "- Use the `forgelore:run`, `forgelore:status`, `forgelore:build`, and `forgelore:validate` tools.",
+            "### Betterspec Rules",
+            "- Do NOT start coding without a spec. Run `betterspec propose` first.",
+            "- Follow patterns in `betterspec/knowledge/patterns.md`.",
+            "- Use the `betterspec:run`, `betterspec:status`, `betterspec:build`, and `betterspec:validate` tools.",
             "- The agent that builds NEVER validates its own work.",
             ""
           );
@@ -83,7 +83,7 @@ export async function createHooks(
           const tasks = summarizeTasks(change.tasks);
           if (tasks.total > 0 && tasks.passed === tasks.total) {
             suggestions.push(
-              `"${change.name}" has all tasks passed — consider archiving with \`forgelore archive ${change.name}\``
+              `"${change.name}" has all tasks passed — consider archiving with \`betterspec archive ${change.name}\``
             );
           }
           const daysSinceUpdate = Math.floor(
@@ -92,7 +92,7 @@ export async function createHooks(
           );
           if (change.status === "proposed" && daysSinceUpdate > 3) {
             suggestions.push(
-              `"${change.name}" has been proposed for ${daysSinceUpdate} days — run \`forgelore clarify ${change.name}\``
+              `"${change.name}" has been proposed for ${daysSinceUpdate} days — run \`betterspec clarify ${change.name}\``
             );
           }
         }
@@ -106,7 +106,7 @@ export async function createHooks(
 
         output.system.push(lines.join("\n"));
       } catch {
-        // Silently skip if forgelore data can't be read
+        // Silently skip if betterspec data can't be read
       }
     },
 
@@ -135,7 +135,7 @@ export async function createHooks(
         // Try to extract the file path from the tool args
         const filePath: string | undefined =
           input.args?.filePath ?? input.args?.path ?? input.args?.file;
-        if (!filePath || filePath.startsWith("forgelore/")) {
+        if (!filePath || filePath.startsWith("betterspec/")) {
           return;
         }
 
@@ -160,7 +160,7 @@ export async function createHooks(
 
         if (!covered && changes.length > 0) {
           // Append warning to the tool output
-          output.output += `\n\n[forgelore] Warning: "${filePath}" is not referenced in any active change's design.md. Consider running \`forgelore propose\` if this is new work.`;
+          output.output += `\n\n[betterspec] Warning: "${filePath}" is not referenced in any active change's design.md. Consider running \`betterspec propose\` if this is new work.`;
         }
       } catch {
         // Silently skip
